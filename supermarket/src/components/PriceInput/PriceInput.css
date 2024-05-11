@@ -1,0 +1,48 @@
+.overall {
+  margin-top: 10px;
+  display: block;
+}
+
+.data-display {
+  display: flex;
+  width: 90vw;
+  justify-content: center;
+  margin: 1vh;
+}
+
+input {
+  width: 60vw;
+}
+
+.qtd {
+  display: flex;
+  justify-content: center;
+  margin-left: 12vw;
+}
+
+.input-quantidade {
+  width: 80px;
+}
+
+.lbl {
+  margin-right: 5px;
+  width: fit-content;
+  width: 60px;
+}
+
+.quantidade {
+  width: 90px;
+}
+
+.half {
+  width: 50vw;
+}
+
+.right {
+  justify-content: right;
+  margin-right: 0px;
+}
+.left {
+  justify-content: left;
+  margin-left: 5px;
+}

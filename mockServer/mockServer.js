@@ -25,13 +25,28 @@ app.get("/productList", (request, response) => {
     .from("products")
     .distinct()
     .then((data) => {
-      console.log(data);
+      response.json(data);
+    });
+});
+
+app.get("/localList", (request, response) => {
+  db.select("local")
+    .from("products")
+    .distinct()
+    .then((data) => {
       response.json(data);
     });
 });
 
 app.post("/insertProduct", (request, response) => {
   const data = request.body.insertProduct;
+
+  if (data.quantidade === "") {
+    data.quantidade = 0;
+  }
+  if (data.preco === "") {
+    data.preco = 0;
+  }
   console.log(data);
   db("products")
     .insert(data)
@@ -42,6 +57,17 @@ app.post("/insertProduct", (request, response) => {
         .distinct()
         .then((newProds) => response.json(newProds))
     );
+});
+
+app.post("/previousPurchases", (request, response) => {
+  const name = request.body;
+  db.select("*")
+    .from("products")
+    .where({ produto: name.name })
+    .then((data) => {
+      console.log(data);
+      response.json(data);
+    });
 });
 
 const port = process.env.PORT || 3000;

@@ -1,0 +1,21 @@
+table,
+th,
+td {
+  border: 1px solid;
+}
+
+table {
+  margin-left: 2vw;
+}
+
+td {
+  padding: 2px;
+}
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.holder {
+  width: 20vw;
+}

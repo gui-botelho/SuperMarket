@@ -1,24 +1,42 @@
 import React from "react";
+import "./PriceInput.css";
+
+function formatDate(date) {
+  let year = "" + date.getFullYear();
+  let month = "" + (date.getMonth() + 1);
+  let day = "" + date.getDate();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
+}
+
+const defaultState = {
+  produto: "",
+  marca: "",
+  quantidade: "",
+  unidade: "",
+  preço: "",
+  local: "",
+  data: formatDate(new Date()),
+  listaDeProdutos: [],
+  listaDeLocais: [],
+};
 
 class PriceInput extends React.Component {
   constructor() {
     super();
-    this.state = {
-      produto: "",
-      marca: "",
-      quantidade: 0,
-      unidade: "",
-      preço: 0,
-      local: "",
-      data: new Date(),
-      listaDeProdutos: [],
-    };
+    this.state = defaultState;
   }
 
   componentDidMount() {
     fetch("http://localhost:3000/productList")
       .then((response) => response.json())
       .then((data) => this.setState({ listaDeProdutos: data }));
+    fetch("http://localhost:3000/localList")
+      .then((response) => response.json())
+      .then((data) => this.setState({ listaDeLocais: data }));
   }
 
   onInputChange = (event) => {
@@ -63,84 +81,126 @@ class PriceInput extends React.Component {
     }
   };
   onInsert = () => {
+    var pricePer = 0;
+    if (
+      this.state.unidade === "g" ||
+      this.state.unidade === "mL" ||
+      this.state.unidade === ""
+    ) {
+      pricePer = (this.state.preço / this.state.quantidade) * 1000;
+    } else {
+      pricePer = this.state.preço / this.state.quantidade;
+    }
+
     const sendProduct = {
       produto: this.state.produto,
       marca: this.state.marca,
       quantidade: this.state.quantidade,
       unidade: this.state.unidade,
-      preco: this.state.preço,
+      preco: Number(pricePer.toFixed(2)),
       local: this.state.local,
       data: this.state.data,
     };
+
     fetch("http://localhost:3000/insertProduct", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ insertProduct: sendProduct }),
     })
       .then((response) => response.json())
-      .then((newProds) =>
-        this.setState({ listaDeProdutos: newProds }, () =>
-          console.log(newProds)
-        )
-      );
+      .then((newProds) => {
+        let newState = { ...defaultState };
+        newState.listaDeProdutos = newProds;
+        this.setState(newState);
+      });
   };
 
   render() {
     return (
-      <div>
-        <div>
-          <div>
-            <label>Produto: </label>
+      <div className="overall">
+        <div className="data-display">
+          <label className="lbl">Produto: </label>
+          <input
+            type="text"
+            list="produtos"
+            id="produto"
+            placeholder="Não informado"
+            value={this.state.produto}
+            onChange={this.onInputChange}
+          ></input>
+          <datalist id="produtos">
+            {this.state.listaDeProdutos.map((item) => (
+              <option>{item.produto}</option>
+            ))}
+          </datalist>
+        </div>
+        <div className="data-display">
+          <label className="lbl">Marca: </label>
+          <input
+            type="text"
+            id="marca"
+            placeholder="Não informado"
+            value={this.state.marca}
+            onChange={this.onInputChange}
+          ></input>
+        </div>
+        <div className="qtd">
+          <div className="data-display half right">
+            <label className="lbl quantidade">Quantidade: </label>
             <input
+              className="input-quantidade"
               type="text"
-              list="produtos"
-              id="produto"
+              id="quantidade"
+              placeholder="0"
+              value={this.state.quantidade}
               onChange={this.onInputChange}
             ></input>
-            <datalist id="produtos">
-              {this.state.listaDeProdutos.map((item) => (
-                <option>{item.produto}</option>
-              ))}
-            </datalist>
           </div>
-          <label>Marca: </label>
-          <input type="text" id="marca" onChange={this.onInputChange}></input>
-          <div>
-            <div>
-              <label>Quantidade: </label>
-              <input
-                type="text"
-                id="quantidade"
-                onChange={this.onInputChange}
-              ></input>
-            </div>
-            <div>
-              <label>Unidade: </label>
-              <select id="unidade" onChange={this.onInputChange}>
-                <option>g</option>
-                <option>Kg</option>
-                <option>mL</option>
-                <option>L</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label>Preço: </label>
-            <input type="text" id="preço" onChange={this.onInputChange}></input>
-          </div>
-          <div>
-            <label>Local: </label>
-            <select id="local" onChange={this.onInputChange}>
-              <option>1</option>
-              <option>2</option>
+          <div className="data-display half left">
+            <select id="unidade" onChange={this.onInputChange}>
+              <option>g</option>
+              <option>Kg</option>
+              <option>mL</option>
+              <option>L</option>
             </select>
           </div>
-          <div>
-            <label>Data: </label>
-            <input type="date" id="data" onChange={this.onInputChange}></input>
-          </div>
-          <button onClick={this.onInsert}>Inserir dados</button>
         </div>
+        <div className="data-display">
+          <label className="lbl">Preço: </label>
+          <input
+            type="text"
+            id="preço"
+            placeholder="0"
+            value={this.state.preço}
+            onChange={this.onInputChange}
+          ></input>
+        </div>
+        <div className="data-display">
+          <label className="lbl">Local: </label>
+          <input
+            type="text"
+            id="local"
+            list="locais"
+            placeholder="Não informado"
+            value={this.state.local}
+            onChange={this.onInputChange}
+          ></input>
+          <datalist id="locais">
+            {this.state.listaDeLocais.map((item) => (
+              <option>{item.local}</option>
+            ))}
+          </datalist>
+        </div>
+        <div className="data-display">
+          <label className="lbl">Data: </label>
+          <input
+            type="date"
+            id="data"
+            value={this.state.data}
+            onChange={this.onInputChange}
+          ></input>
+        </div>
+        <button onClick={this.onInsert}>Inserir dados</button>
       </div>
     );
   }
