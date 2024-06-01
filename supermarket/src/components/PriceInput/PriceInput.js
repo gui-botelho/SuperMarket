@@ -19,7 +19,7 @@ const defaultState = {
   produto: "",
   marca: "",
   quantidade: "",
-  unidade: "",
+  unidade: "g",
   preço: "",
   local: "",
   data: formatDate(new Date()),
