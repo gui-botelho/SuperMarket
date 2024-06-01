@@ -11,6 +11,7 @@ table {
 td {
   padding: 2px;
   font-size: 1.6ch;
+  width: fit-content;
 }
 
 .mb10 {

@@ -1,6 +1,8 @@
 import React from "react";
 import "./PriceDisplay.css";
 
+const SERVER = process.env.REACT_APP_SERVER_URL;
+
 class PriceDisplay extends React.Component {
   constructor() {
     super();
@@ -11,7 +13,7 @@ class PriceDisplay extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/productList")
+    fetch(`${SERVER}/productList`)
       .then((response) => response.json())
       .then((data) => this.setState({ listaDeProdutos: data }));
   }
@@ -19,7 +21,7 @@ class PriceDisplay extends React.Component {
   isMatch = (event) => {
     this.state.listaDeProdutos.forEach((value) => {
       if (value.produto === event.target.value) {
-        fetch("http://localhost:3000/previousPurchases", {
+        fetch(`${SERVER}/previousPurchases`, {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: event.target.value }),
