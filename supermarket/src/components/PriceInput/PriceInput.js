@@ -160,7 +160,7 @@ class PriceInput extends React.Component {
             ></input>
           </div>
           <div className="data-display half left">
-            <select id="unidade" onChange={this.onInputChange}>
+            <select id="unidade" value={this.state.unidade} onChange={this.onInputChange}>
               <option>g</option>
               <option>Kg</option>
               <option>mL</option>
