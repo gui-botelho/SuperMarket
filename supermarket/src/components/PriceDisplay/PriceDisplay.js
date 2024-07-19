@@ -60,6 +60,7 @@ class PriceDisplay extends React.Component {
             type="text"
             list="produtos"
             id="produto"
+            onFocus={(this.value = "")}
             onChange={this.isMatch}
           ></input>
           <datalist id="produtos">
