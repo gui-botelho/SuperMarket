@@ -4,14 +4,17 @@ import "./PriceDisplay.css";
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
 function formatDate(date) {
-  let year = "" + date.getFullYear();
-  let month = "" + (date.getMonth() + 1);
-  let day = "" + date.getDate();
+  // Ensure the date is in UTC
+  let utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+
+  let year = "" + utcDate.getUTCFullYear();
+  let month = "" + (utcDate.getUTCMonth() + 1);
+  let day = "" + utcDate.getUTCDate();
 
   if (month.length < 2) month = "0" + month;
   if (day.length < 2) day = "0" + day;
 
-  return [year, month, day].join("/");
+  return [day, month, year].join("/");
 }
 
 class PriceDisplay extends React.Component {
