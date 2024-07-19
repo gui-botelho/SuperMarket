@@ -3,6 +3,17 @@ import "./PriceDisplay.css";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
+function formatDate(date) {
+  let year = "" + date.getFullYear();
+  let month = "" + (date.getMonth() + 1);
+  let day = "" + date.getDate();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("/");
+}
+
 class PriceDisplay extends React.Component {
   constructor() {
     super();
@@ -65,9 +76,7 @@ class PriceDisplay extends React.Component {
           {this.state.comprasAnteriores.length > 0 ? (
             this.state.comprasAnteriores.map((item, index) => (
               <tr key={index}>
-                <td>{`${new Date(item.data).getDate()}/
-                ${new Date(item.data).getMonth()}/
-                ${new Date(item.data).getFullYear()}`}</td>
+                <td>{`${formatDate(new Date(item.data))}`}</td>
                 <td>{item.local}</td>
                 <td>{item.marca}</td>
                 <td>{item.preco}</td>

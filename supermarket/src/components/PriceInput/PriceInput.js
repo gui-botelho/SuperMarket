@@ -2,6 +2,7 @@ import React from "react";
 import "./PriceInput.css";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
+console.log(SERVER);
 
 function formatDate(date) {
   let year = "" + date.getFullYear();
